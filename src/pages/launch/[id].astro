@@ -1,0 +1,48 @@
+---
+    import Layout from '../../layouts/Layout.astro';
+    import { getLatestLaunches, getLaunchById } from '../../services/spacesx';
+
+    // Esto es cuando en el archivo astro.config.js se tiene la propiedad hybrid: true en ouput y se comenta la funcion getStaticPaths
+    export const prerender = false;
+
+    const { id } = Astro.params;
+
+    console.log(id);
+
+    let launch;
+
+    if (id) {
+        launch = await getLaunchById({ id });
+    }
+
+    // // Generar todas las páginas estáticas 
+    // export async function getStaticPaths() {
+    //     // Llamar una API externa para saber todas las id's que debe generar
+    //     const launches = await getLatestLaunches();
+        
+    //     return launches.map(launch => ({
+    //         params: {
+    //             id: launch.id
+    //         }
+    //     }));
+    // };
+
+    console.log(launch);
+---
+
+<Layout title={`Lanzamiento ${id}`}>
+    <article class="flex gap-y-4 flex-col">
+        <img
+            class="w-52 h-auto"
+            src={launch?.links?.patch.small}
+            alt={launch?.name}
+        />
+        <h2 class="text-4xl text-white font-bold">
+            Launch # {launch?.flight_number}
+        </h2>
+        <p class="text-lg">
+            {launch?.details}
+        </p>
+        <!-- {launch?.id} -->
+    </article>
+</Layout>
